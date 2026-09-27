@@ -15,4 +15,7 @@ python convert.py ../預覽合本/合本預覽.pdf
 
 ## GitHub Pages
 
+Repository：https://github.com/Russell0123/athology_reviewer
+網址：https://russell0123.github.io/athology_reviewer/
+
 Settings → Pages → Source 選 `Deploy from a branch`，Branch 選 `main`，資料夾選 **`/docs`**。
