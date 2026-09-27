@@ -24,8 +24,20 @@ WATERMARK = HERE / '浮水印.png'
 WATERMARK_PAGES = range(4, 25)   # 第 4～24 頁蓋浮水印（PDF 頁碼，含頭尾）
 WATERMARK_OPACITY = {4: 0.6, 5: 0.6, 6: 0.6}   # 個別頁面的浮水印透明度（沒列出的是 100%）
 WHITE_PAGES = {10, 12, 14, 15, 16, 17, 22, 23, 24}   # 整頁蓋成全白
+WHITE_PAGE_IMAGE = HERE / '期待.png'   # 全白頁中間放的圖（和頁面同比例的透明畫布，會自動置中）
 
 OUT = HERE / 'docs' / 'pages'
+
+
+def white_page(size):
+    """全白頁，中間放上 WHITE_PAGE_IMAGE 的內容（大小依頁面比例縮放）。"""
+    page = Image.new('RGBA', size, 'white')
+    art = Image.open(WHITE_PAGE_IMAGE).convert('RGBA')
+    scale = size[1] / art.height
+    art = art.crop(art.getchannel('A').getbbox())
+    art = art.resize((round(art.width * scale), round(art.height * scale)), Image.LANCZOS)
+    page.alpha_composite(art, ((size[0] - art.width) // 2, (size[1] - art.height) // 2))
+    return page.convert('RGB')
 
 
 def main():
@@ -44,7 +56,7 @@ def main():
         pix = page.get_pixmap(matrix=pymupdf.Matrix(zoom, zoom), alpha=False)
         img = Image.frombytes('RGB', (pix.width, pix.height), pix.samples)
         if i in WHITE_PAGES:
-            img = Image.new('RGB', img.size, 'white')
+            img = white_page(img.size)
         elif i in WATERMARK_PAGES:
             wm = watermark.resize(img.size, Image.LANCZOS)
             opacity = WATERMARK_OPACITY.get(i, 1.0)
