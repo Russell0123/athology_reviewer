@@ -1,0 +1,4 @@
+*.pdf
+.claude/
+__pycache__/
+浮水印.png
