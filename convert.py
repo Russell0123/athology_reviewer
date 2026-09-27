@@ -22,6 +22,8 @@ WM_QUALITY = 75      # 有浮水印的頁面畫質（浮水印的顆粒很佔空
 HERE = Path(__file__).parent
 WATERMARK = HERE / '浮水印.png'
 WATERMARK_PAGES = range(4, 25)   # 第 4～24 頁蓋浮水印（PDF 頁碼，含頭尾）
+WATERMARK_OPACITY = {4: 0.6, 5: 0.6, 6: 0.6}   # 個別頁面的浮水印透明度（沒列出的是 100%）
+WHITE_PAGES = {10, 12, 14, 15, 16, 17, 22, 23, 24}   # 整頁蓋成全白
 
 OUT = HERE / 'docs' / 'pages'
 
@@ -41,8 +43,13 @@ def main():
         zoom = PAGE_HEIGHT / page.rect.height
         pix = page.get_pixmap(matrix=pymupdf.Matrix(zoom, zoom), alpha=False)
         img = Image.frombytes('RGB', (pix.width, pix.height), pix.samples)
-        if i in WATERMARK_PAGES:
+        if i in WHITE_PAGES:
+            img = Image.new('RGB', img.size, 'white')
+        elif i in WATERMARK_PAGES:
             wm = watermark.resize(img.size, Image.LANCZOS)
+            opacity = WATERMARK_OPACITY.get(i, 1.0)
+            if opacity < 1:
+                wm.putalpha(wm.getchannel('A').point(lambda a: round(a * opacity)))
             img = Image.alpha_composite(img.convert('RGBA'), wm).convert('RGB')
         name = f'{i:03d}.webp'
         img.save(OUT / name, 'WEBP', quality=WM_QUALITY if i in WATERMARK_PAGES else QUALITY, method=6)
@@ -57,7 +64,7 @@ def main():
         'version': int(time.time()),  # 讓瀏覽器知道圖片更新了
     }
     (OUT / 'pages.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=1), encoding='utf-8')
-    print(f'\n完成：{len(files)} 頁（第 {WATERMARK_PAGES.start}～{WATERMARK_PAGES.stop - 1} 頁已加浮水印），'
+    print(f'\n完成：{len(files)} 頁（浮水印：第 {WATERMARK_PAGES.start}～{WATERMARK_PAGES.stop - 1} 頁；全白：{sorted(WHITE_PAGES)}），'
           f'共 {total / 1e6:.1f} MB → {OUT}')
 
 
