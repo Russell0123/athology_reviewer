@@ -10,7 +10,7 @@ python convert.py ../預覽合本/合本預覽.pdf
 ```
 
 - 浮水印圖檔：`浮水印.png`（不上傳到 GitHub）
-- 要改蓋浮水印的頁數：修改 `convert.py` 裡的 `WATERMARK_PAGES`
+- 要改哪些頁蓋浮水印、透明度、哪些頁全白：修改 `convert.py` 裡的 `WATERMARK_PAGES`、`WATERMARK_OPACITY`、`WHITE_PAGES`
 - 改完 commit + push，網站就會更新
 
 ## GitHub Pages
