@@ -23,7 +23,7 @@ HERE = Path(__file__).parent
 WATERMARK = HERE / '浮水印.png'
 WATERMARK_PAGES = range(7, 25)   # 第 7～24 頁蓋浮水印（PDF 頁碼，含頭尾）
 WATERMARK_OPACITY = {}   # 個別頁面的浮水印透明度（沒列出的是 100%）
-WHITE_PAGES = set(range(15, 26)) - {24}   # 第 15～25 頁蓋成白頁（敬請期待），第 24 頁除外
+WHITE_PAGES = set(range(15, 25))   # 第 15～24 頁蓋成白頁（敬請期待）
 WHITE_OPACITY = 0.88                # 白底的不透明度（1 = 完全蓋住，0.88 = 隱約透出原圖）
 WHITE_PAGE_IMAGE = HERE / '期待.png'   # 全白頁中間放的圖（和頁面同比例的透明畫布，會自動置中）
 WHITE_PAGE_IMAGE_SCALE = 0.7          # 圖的大小（1 = 原圖大小）
