@@ -21,7 +21,7 @@ WM_QUALITY = 75      # 有浮水印的頁面畫質（浮水印的顆粒很佔空
 
 HERE = Path(__file__).parent
 WATERMARK = HERE / '浮水印.png'
-WATERMARK_PAGES = range(7, 25)   # 第 7～24 頁蓋浮水印（PDF 頁碼，含頭尾）
+WATERMARK_PAGES = range(9, 25)   # 第 9～24 頁蓋浮水印（PDF 頁碼，含頭尾）
 WATERMARK_OPACITY = {}   # 個別頁面的浮水印透明度（沒列出的是 100%）
 WHITE_PAGES = set(range(15, 25))   # 第 15～24 頁蓋成白頁（敬請期待）
 WHITE_PAGE_COVER = HERE / '浮水印2.png'   # 白底頁先整張蓋上這張圖（100%）
