@@ -24,7 +24,7 @@ WATERMARK = HERE / '浮水印.png'
 WATERMARK_PAGES = range(7, 25)   # 第 7～24 頁蓋浮水印（PDF 頁碼，含頭尾）
 WATERMARK_OPACITY = {}   # 個別頁面的浮水印透明度（沒列出的是 100%）
 WHITE_PAGES = set(range(15, 25))   # 第 15～24 頁蓋成白頁（敬請期待）
-WHITE_OPACITY = 0.88                # 白底的不透明度（1 = 完全蓋住，0.88 = 隱約透出原圖）
+WHITE_PAGE_COVER = HERE / '浮水印2.png'   # 白底頁先整張蓋上這張圖（100%）
 WHITE_PAGE_IMAGE = HERE / '期待.png'   # 全白頁中間放的圖（和頁面同比例的透明畫布，會自動置中）
 WHITE_PAGE_IMAGE_SCALE = 0.7          # 圖的大小（1 = 原圖大小）
 
@@ -32,9 +32,10 @@ OUT = HERE / 'docs' / 'pages'
 
 
 def white_page(img):
-    """在原圖上蓋一層白底（WHITE_OPACITY），中間放上 WHITE_PAGE_IMAGE 的內容（大小依頁面比例縮放）。"""
+    """在原圖上蓋 WHITE_PAGE_COVER，中間再放上 WHITE_PAGE_IMAGE 的內容（大小依頁面比例縮放）。"""
     size = img.size
-    page = Image.blend(img, Image.new('RGB', size, 'white'), WHITE_OPACITY).convert('RGBA')
+    page = img.convert('RGBA')
+    page.alpha_composite(Image.open(WHITE_PAGE_COVER).convert('RGBA').resize(size, Image.LANCZOS))
     art = Image.open(WHITE_PAGE_IMAGE).convert('RGBA')
     scale = size[1] / art.height * WHITE_PAGE_IMAGE_SCALE
     art = art.crop(art.getchannel('A').getbbox())
